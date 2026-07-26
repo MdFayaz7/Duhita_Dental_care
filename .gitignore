@@ -1,0 +1,25 @@
+# Frontend has its own git repo (deployed separately on Vercel) — exclude entirely
+duhita-dental/
+
+# Environment files — NEVER commit these
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# macOS
+.DS_Store
+
+# Uploads (local disk files — not needed in git, GridFS handles this)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Frontend build output
+duhita-dental/dist/
+
+# Logs
+*.log
+npm-debug.log*
