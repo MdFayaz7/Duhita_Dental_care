@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-primary: #0063dc;
+  --color-brand-primary-dark: #0557bc;
+  --color-brand-navy: #0b1341;
+  --color-brand-navy-soft: #1c2440;
+  --color-brand-gray: #424242;
+  --color-brand-surface: #f2f5f7;
+  --color-brand-surface-alt: #f1f3f4;
+  --color-brand-accent: #61ce70;
+  --color-brand-white: #ffffff;
+  --color-brand-dark-bg: #060b24;
+  --color-brand-dark-surface: #0d1430;
+  --color-brand-dark-card: #121a3a;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-brand-navy);
+    background-color: var(--color-brand-white);
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark body {
+    color: #e8ecf4;
+    background-color: var(--color-brand-dark-bg);
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Swiper — Google Reviews slider */
+.swiper-pagination-bullet {
+  background: var(--color-brand-primary);
+  opacity: 0.25;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+.dark .swiper-pagination-bullet {
+  background: #ffffff;
+  opacity: 0.3;
+}
+
+.dark .swiper-pagination-bullet-active {
+  opacity: 1;
+}
