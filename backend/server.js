@@ -30,15 +30,21 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'https://duhitha-dental-care-frontend-bvjn.vercel.app',
-  // Add any future Vercel preview URLs or custom domain here
+  // Add any future custom domains here
 ];
+
+// Also allow any Vercel preview/deployment URL for this project
+const vercelPattern = /^https:\/\/[\w-]+\.vercel\.app$/;
+
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (mobile apps, curl, Postman, etc.)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS: Origin "${origin}" not allowed`));
+      if (vercelPattern.test(origin)) return callback(null, true);
+      // Return false instead of Error to avoid 500 on preflight
+      callback(null, false);
     },
     credentials: true,
   })
