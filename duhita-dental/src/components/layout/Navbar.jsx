@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { HiOutlineMenuAlt3, HiOutlineX } from 'react-icons/hi';
 import { FiPhone, FiLock } from 'react-icons/fi';
 import { site } from '../../data/content';
@@ -7,7 +7,7 @@ import { images } from '../../data/assets';
 import useScrollPosition from '../../hooks/useScrollPosition';
 import LazyImage from '../ui/LazyImage';
 import ThemeToggle from '../ui/ThemeToggle';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -104,6 +104,35 @@ function BrandText() {
 export default function Navbar({ onOpenBooking }) {
   const scrolled = useScrollPosition(24);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavClick = useCallback((e, href) => {
+    e.preventDefault();
+    if (href === '/') {
+      // If already on home, scroll to top; otherwise navigate to home
+      if (location.pathname === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate('/');
+        // Scroll to top after navigation
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+      }
+    } else if (href.startsWith('/#')) {
+      const sectionId = href.slice(2); // remove '/#'
+      if (location.pathname !== '/') {
+        // Navigate to home first, then scroll to section
+        navigate('/');
+        setTimeout(() => {
+          const el = document.getElementById(sectionId);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [navigate, location.pathname]);
 
   const headerClass = scrolled
     ? 'border-b border-white/10 bg-brand-navy/80 shadow-[0_8px_32px_rgba(11,19,65,0.18)] backdrop-blur-xl dark:bg-brand-dark-bg/90 dark:border-white/10'
@@ -118,17 +147,18 @@ export default function Navbar({ onOpenBooking }) {
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${headerClass}`}
       >
         <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 md:px-8 lg:h-[84px] overflow-visible">
-          <a href="/" className="relative z-10 flex shrink-0 items-center gap-1">
+          <Link to="/" onClick={(e) => handleNavClick(e, '/')} className="relative z-10 flex shrink-0 items-center gap-1">
             <LogoAnimated src={images.logo} alt={`${site.name} logo`} />
             <BrandText />
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
             {navLinks.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="rounded-full px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white cursor-pointer"
               >
                 {item.label}
               </a>
@@ -199,8 +229,8 @@ export default function Navbar({ onOpenBooking }) {
                   initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 * index }}
-                  className="border-b border-white/10 py-4 text-2xl font-semibold text-white"
-                  onClick={() => setOpen(false)}
+                  className="border-b border-white/10 py-4 text-2xl font-semibold text-white cursor-pointer"
+                  onClick={(e) => { handleNavClick(e, item.href); setOpen(false); }}
                 >
                   {item.label}
                 </motion.a>

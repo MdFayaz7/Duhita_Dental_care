@@ -16,7 +16,7 @@ const fadeUp = {
 export default function Hero({ onOpenBooking }) {
   const sectionRef = useRef(null);
   const videoRef = useRef(null);
-  const [isMuted, setIsMuted] = useState(false); // Audio ON by default when in Home section
+  const [isMuted, setIsMuted] = useState(true); // Start muted for instant autoplay
 
   const playWithAudio = () => {
     const video = videoRef.current;
@@ -189,7 +189,9 @@ export default function Hero({ onOpenBooking }) {
                   ref={videoRef}
                   autoPlay
                   loop
+                  muted
                   playsInline
+                  preload="auto"
                   poster={images.hospital}
                   className="h-full w-full object-cover filter brightness-105 contrast-105"
                 >
