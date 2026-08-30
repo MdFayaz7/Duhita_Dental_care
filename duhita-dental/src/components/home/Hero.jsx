@@ -27,11 +27,28 @@ export default function Hero({ onOpenBooking }) {
       <motion.div style={{ y, opacity: fade }} className="mx-auto w-full max-w-[1440px] px-5 md:px-8">
         <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,580px)_minmax(0,1fr)] lg:gap-12">
           <div>
-            <motion.span {...rise(0)} className="type-eyebrow block text-brand-orange">
-              {heroCopy.eyebrow}
-            </motion.span>
+            <motion.p
+              initial="hidden"
+              animate="shown"
+              variants={{ shown: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } }}
+              className="text-shimmer flex flex-wrap gap-x-[0.3em] text-[clamp(1.25rem,2vw,1.75rem)] font-semibold leading-[1.18] tracking-[-0.01em]"
+            >
+              {heroCopy.eyebrow.split(' ').map((word) => (
+                <motion.span
+                  key={word}
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    shown: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.75, ease: [0.22, 0.68, 0, 1] }}
+                  className="inline-block"
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </motion.p>
 
-            <motion.h1 {...rise(0.08)} className="display-1 text-grad mt-3 lg:text-[3rem] xl:text-[3.5rem]">
+            <motion.h1 {...rise(0.08)} className="display-1 text-grad mt-4 lg:text-[3rem] xl:text-[3.5rem]">
               {heroCopy.titleTop}
               <span className="block text-grad-blue">{heroCopy.titleBottom}</span>
             </motion.h1>

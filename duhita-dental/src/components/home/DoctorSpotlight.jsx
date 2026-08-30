@@ -111,7 +111,7 @@ export default function DoctorSpotlight({ onOpenBooking, compact = false }) {
               onClick={() => onOpenBooking?.(doc.name)}
               className="type-cta group mt-9 inline-flex items-center gap-2 rounded-full bg-brand-primary px-6 py-3 text-white transition-colors duration-300 hover:bg-[#3b9bff]"
             >
-              <FiCalendar size={16} /> Consult {doc.name.split(' ')[0]} {doc.name.split(' ')[1] || ''}
+              <FiCalendar size={16} /> Consult {doc.name}
             </button>
           </Reveal>
         </div>
