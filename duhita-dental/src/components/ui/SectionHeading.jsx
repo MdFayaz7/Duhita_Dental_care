@@ -1,56 +1,32 @@
-import { motion } from 'framer-motion';
-import useInView from '../../hooks/useInView';
+import Reveal from './Reveal';
 
 export default function SectionHeading({
   eyebrow,
   title,
-  description,
-  align = 'left',
-  light = false,
+  subtitle,
+  align = 'center',
   className = '',
 }) {
-  const [ref, inView] = useInView({ threshold: 0.3 });
-
-  const alignClass =
-    align === 'center'
-      ? 'text-center mx-auto'
-      : align === 'right'
-        ? 'text-right ml-auto'
-        : 'text-left';
+  const alignment =
+    align === 'left' ? 'text-left items-start' : 'text-center items-center mx-auto';
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className={`max-w-2xl ${alignClass} ${className}`}
-    >
+    <div className={`flex flex-col ${alignment} ${className}`}>
       {eyebrow && (
-        <p
-          className={`mb-3 text-xs font-bold uppercase tracking-[0.22em] ${
-            light ? 'text-brand-accent' : 'text-brand-primary dark:text-brand-accent'
-          }`}
-        >
-          {eyebrow}
-        </p>
+        <Reveal from="fade" duration={0.6}>
+          <span className="type-eyebrow block text-brand-orange">{eyebrow}</span>
+        </Reveal>
       )}
-      <h2
-        className={`text-3xl font-semibold tracking-tight md:text-4xl lg:text-[2.75rem] lg:leading-[1.1] ${
-          light ? 'text-white' : 'text-brand-navy dark:text-white'
-        }`}
-      >
-        {title}
-      </h2>
-      {description && (
-        <p
-          className={`mt-4 text-base leading-relaxed md:text-lg ${
-            light ? 'text-white/70' : 'text-brand-gray dark:text-white/60'
-          }`}
-        >
-          {description}
-        </p>
+      <Reveal delay={0.05}>
+        <h2 className="display-2 text-grad max-w-4xl text-balance">{title}</h2>
+      </Reveal>
+      {subtitle && (
+        <Reveal delay={0.12}>
+          <p className={`type-lead mt-4 max-w-2xl text-mute ${align === 'center' ? 'mx-auto' : ''}`}>
+            {subtitle}
+          </p>
+        </Reveal>
       )}
-    </motion.div>
+    </div>
   );
 }

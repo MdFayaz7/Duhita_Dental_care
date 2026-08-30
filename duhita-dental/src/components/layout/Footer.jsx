@@ -1,120 +1,107 @@
-import { FaFacebookF, FaGoogle, FaInstagram, FaWhatsapp } from 'react-icons/fa';
-import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
-import { allServices, navigation, site } from '../../data/content';
-import { images } from '../../data/assets';
-import LazyImage from '../ui/LazyImage';
-
-const socialLinks = [
-  { icon: FaFacebookF, href: site.social.facebook, label: 'Facebook' },
-  { icon: FaInstagram, href: site.social.instagram, label: 'Instagram' },
-  { icon: FaGoogle, href: site.social.google, label: 'Google' },
-  { icon: FaWhatsapp, href: site.social.whatsapp, label: 'WhatsApp' },
-];
+import { Link } from 'react-router-dom';
+import { FiPhone, FiMail, FiMapPin, FiInstagram, FiFacebook, FiArrowUpRight } from 'react-icons/fi';
+import { navigation, site } from '../../data/content';
+import { services } from '../../data/services';
+import Logo from './Logo';
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="bg-brand-navy text-white">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-20">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-1">
-            <LazyImage
-              src={images.logo}
-              alt={`${site.name} logo`}
-              className="h-10 w-auto brightness-0 invert"
-              wrapperClassName="mb-5"
-            />
-            <p className="text-sm leading-relaxed text-white/65">{site.description}</p>
-            <div className="mt-6 flex gap-3">
-              {socialLinks.map(({ icon: Icon, href, label }) => (
+    <footer className="relative overflow-hidden border-t border-white/[0.08] bg-black pt-20">
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(10,132,255,0.18),transparent)]" />
+
+      <div className="shell relative">
+        <div className="grid gap-12 pb-14 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+          <div>
+            <Link to="/" className="group inline-flex">
+              <Logo height={96} />
+            </Link>
+            <p className="type-body mt-5 max-w-sm text-mute">
+              {site.fullName}. Multispeciality dental care in Vijayawada since {site.established}.
+            </p>
+            <div className="mt-6 flex gap-2.5">
+              {[
+                { icon: FiInstagram, href: site.social.instagram, label: 'Instagram' },
+                { icon: FiFacebook, href: site.social.facebook, label: 'Facebook' },
+              ].map((s) => (
                 <a
-                  key={label}
-                  href={href}
+                  key={s.label}
+                  href={s.href}
                   target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-brand-accent hover:bg-brand-accent hover:text-white"
+                  rel="noreferrer"
+                  aria-label={s.label}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 text-mute transition-all duration-400 hover:border-white/30 hover:text-white"
                 >
-                  <Icon size={16} />
+                  <s.icon size={16} />
                 </a>
               ))}
             </div>
           </div>
 
           <div>
-            <h4 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-brand-accent">
-              Quick Links
-            </h4>
-            <ul className="space-y-3">
-              {navigation.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="text-sm text-white/70 transition-colors hover:text-white"
-                  >
-                    {item.label}
-                  </a>
+            <h4 className="type-caption font-semibold uppercase tracking-[0.08em] text-brand-orange">Navigate</h4>
+            <ul className="mt-5 space-y-3">
+              {navigation.map((n) => (
+                <li key={n.href}>
+                  <Link to={n.href} className="type-body text-mute transition-colors hover:text-white">
+                    {n.label}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-brand-accent">
-              Services
-            </h4>
-            <ul className="space-y-3">
-              {allServices.map((item) => (
-                <li key={item}>
-                  <a
-                    href="/services"
-                    className="text-sm text-white/70 transition-colors hover:text-white"
-                  >
-                    {item}
-                  </a>
+            <h4 className="type-caption font-semibold uppercase tracking-[0.08em] text-brand-orange">Treatments</h4>
+            <ul className="mt-5 space-y-3">
+              {services.slice(0, 7).map((s) => (
+                <li key={s.id}>
+                  <Link to={`/services#${s.id}`} className="type-body text-mute transition-colors hover:text-white">
+                    {s.title}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-brand-accent">
-              Contact
-            </h4>
-            <ul className="space-y-4 text-sm text-white/70">
+            <h4 className="type-caption font-semibold uppercase tracking-[0.08em] text-brand-orange">Reach us</h4>
+            <ul className="type-body mt-5 space-y-4 text-mute">
               <li className="flex gap-3">
-                <FiMapPin className="mt-0.5 shrink-0 text-brand-accent" />
-                <span>{site.address}</span>
+                <FiMapPin className="mt-0.5 shrink-0 text-brand-cyan" size={15} />
+                <span className="leading-relaxed">{site.address}</span>
               </li>
               <li>
-                <a
-                  href={`tel:${site.phone}`}
-                  className="flex items-center gap-3 transition-colors hover:text-white"
-                >
-                  <FiPhone className="shrink-0 text-brand-accent" />
+                <a href={`tel:${site.phone}`} className="flex items-center gap-3 transition-colors hover:text-white">
+                  <FiPhone className="shrink-0 text-brand-cyan" size={15} />
                   {site.phoneDisplay}
                 </a>
               </li>
               <li>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="flex items-center gap-3 transition-colors hover:text-white"
-                >
-                  <FiMail className="shrink-0 text-brand-accent" />
+                <a href={`mailto:${site.email}`} className="flex items-center gap-3 transition-colors hover:text-white">
+                  <FiMail className="shrink-0 text-brand-cyan" size={15} />
                   {site.email}
                 </a>
               </li>
             </ul>
-            <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 text-sm">
-              <p className="font-semibold text-white">Hospital Timings</p>
-              <p className="mt-2 text-white/65">Morning: {site.hours.morning}</p>
-              <p className="text-white/65">Evening: {site.hours.evening}</p>
-            </div>
+            <p className="type-body mt-5 text-mute-2">
+              {site.hours.morning} · {site.hours.evening}
+            </p>
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/50 md:flex-row">
-          <p>© {new Date().getFullYear()} {site.fullName}. All rights reserved.</p>
-          <p>Benz Circle, Vijayawada · Multispeciality Dental Care</p>
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-white/[0.08] py-7 sm:flex-row">
+          <p className="type-caption text-mute-2">
+            © {year} {site.fullName}. All rights reserved.
+          </p>
+          <Link
+            to="/admin/login"
+            className="type-caption group inline-flex items-center gap-1.5 text-mute-2 transition-colors hover:text-mute"
+          >
+            Staff login
+            <FiArrowUpRight size={13} className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
       </div>
     </footer>

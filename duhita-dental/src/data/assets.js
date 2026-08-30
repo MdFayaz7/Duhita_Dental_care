@@ -1,17 +1,15 @@
-import heroTransparent from '../assets/hero.png';
-
-const CDN = 'https://www.duhitadental.in/wp-content/uploads';
-
 export const images = {
-  /** Local logo */
   logo: '/assets/logo.png',
-  /** Transparent decorative overlay for hero */
-  heroGraphic: heroTransparent,
-  /** Local home section background image */
-  hospital: '/assets/home.png',
-  /** Local uploaded doctor image — Dr. Nalluru Sasidhar */
-  doctor: '/assets/dr.jpeg',
-  about: '/assets/home.png',
+  logoMark: '/assets/logo-mark.png',
+  hospital: '/assets/hosp.jpg.avif',
+  about: '/assets/hosp.jpg.avif',
   faq: '/assets/hosp.jpg.avif',
-  favicon: `${CDN}/2023/05/cropped-Untitled-design-1-32x32.png`,
+  doctor: '/assets/dr.jpeg',
+  hero: '/assets/hero.png',
+  ehs: '/assets/ehs.png',
+  favicon: '/assets/logo-mark.png',
+};
+
+export const media = {
+  heroVideo: '/media/heroandchat.mp4',
 };

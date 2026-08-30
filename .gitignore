@@ -20,3 +20,9 @@ duhita-dental/dist/
 # Logs
 *.log
 npm-debug.log*
+
+# Local Claude Code config
+.claude/
+
+# Design source material (originals, not used by the build)
+duhita-dental/duhita resources/

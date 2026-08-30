@@ -1,87 +1,62 @@
-import { motion } from 'framer-motion';
-import { FiClock, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
+import { FiMapPin, FiClock, FiPhone, FiMail } from 'react-icons/fi';
 import { site } from '../../data/content';
+import Reveal from '../ui/Reveal';
 import SectionHeading from '../ui/SectionHeading';
+
+const items = [
+  { icon: FiMapPin, label: 'Clinic address', value: site.address },
+  { icon: FiClock, label: 'Opening hours', value: `${site.hours.morning} · ${site.hours.evening}` },
+  { icon: FiPhone, label: 'Phone', value: site.phoneDisplay, href: `tel:${site.phone}` },
+  { icon: FiMail, label: 'Email', value: site.email, href: `mailto:${site.email}` },
+];
 
 export default function MapSection() {
   return (
-    <section id="contact" className="bg-brand-surface py-24 dark:bg-brand-dark-surface md:py-32">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
+    <section id="contact" className="relative bg-black py-24 md:py-32">
+      <div className="shell">
         <SectionHeading
+          align="left"
           eyebrow="Visit Us"
-          title="Find Us at Benz Circle"
-          description="Conveniently located on NH 16 Service Road, Vijayawada."
-          className="mb-14"
+          title="Benz Circle, Vijayawada."
+          subtitle="Walk in during clinic hours or reserve a slot online and skip the wait entirely."
+          className="max-w-2xl"
         />
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="flex flex-col gap-4"
-          >
-            {[
-              { icon: FiMapPin, label: 'Address', value: site.address },
-              { icon: FiPhone, label: 'Phone', value: site.phoneDisplay, href: `tel:${site.phone}` },
-              { icon: FiMail, label: 'Email', value: site.email, href: `mailto:${site.email}` },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-brand-navy/8 bg-white p-6 dark:border-white/10 dark:bg-brand-dark-card"
-              >
-                <div className="mb-2 flex items-center gap-2 text-brand-primary">
-                  <item.icon size={18} />
-                  <span className="text-xs font-bold uppercase tracking-[0.18em]">
-                    {item.label}
+        <div className="mt-14 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            {items.map((item, i) => (
+              <Reveal key={item.label} delay={i * 0.07}>
+                <a
+                  href={item.href || site.social.google}
+                  target={item.href ? undefined : '_blank'}
+                  rel="noreferrer"
+                  className="group flex h-full items-start gap-4 rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.01] p-6 transition-all duration-600 hover:-translate-y-0.5 hover:border-white/20"
+                >
+                  <span className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-brand-primary/15 text-brand-cyan ring-1 ring-brand-primary/25">
+                    <item.icon size={17} />
                   </span>
-                </div>
-                {item.href ? (
-                  <a
-                    href={item.href}
-                    className="text-sm leading-relaxed text-brand-navy transition-colors hover:text-brand-primary dark:text-white/85 dark:hover:text-brand-primary"
-                  >
-                    {item.value}
-                  </a>
-                ) : (
-                  <p className="text-sm leading-relaxed text-brand-navy dark:text-white/85">{item.value}</p>
-                )}
-              </div>
+                  <span className="min-w-0">
+                    <span className="type-caption block font-semibold tracking-[0.06em] text-mute-2">
+                      {item.label}
+                    </span>
+                    <span className="type-body mt-1.5 block text-chalk">{item.value}</span>
+                  </span>
+                </a>
+              </Reveal>
             ))}
+          </div>
 
-            <div className="rounded-2xl border border-brand-navy/8 bg-white p-6 dark:border-white/10 dark:bg-brand-dark-card">
-              <div className="mb-3 flex items-center gap-2 text-brand-primary">
-                <FiClock size={18} />
-                <span className="text-xs font-bold uppercase tracking-[0.18em]">
-                  Hospital Timings
-                </span>
-              </div>
-              <p className="text-sm text-brand-navy dark:text-white/85">
-                <span className="font-semibold">Morning:</span> {site.hours.morning}
-              </p>
-              <p className="mt-1 text-sm text-brand-navy dark:text-white/85">
-                <span className="font-semibold">Evening:</span> {site.hours.evening}
-              </p>
+          <Reveal from="left">
+            <div className="relative h-full min-h-[420px] overflow-hidden rounded-[28px] border border-white/[0.1] bg-white/[0.02] p-2">
+              <iframe
+                title="Duhita Dental location"
+                src={site.mapEmbed}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-full min-h-[404px] w-full rounded-[22px] border-0 grayscale-[0.35] invert-[0.92] hue-rotate-180 contrast-[0.9]"
+              />
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="overflow-hidden rounded-[2rem] border border-brand-navy/8 bg-white shadow-[0_20px_60px_-30px_rgba(11,19,65,0.2)] dark:border-white/10 dark:bg-brand-dark-card"
-          >
-            <iframe
-              title="Duhita Multispeciality Dental Centre location"
-              src={site.mapEmbed}
-              className="h-[420px] w-full md:h-full md:min-h-[480px]"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-            />
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>

@@ -28,10 +28,11 @@ export const site = {
 
 export const navigation = [
   { label: 'Home', href: '/' },
-  { label: 'About', href: '/#about' },
-  { label: 'Services', href: '/#services' },
-  { label: 'Gallery', href: '/#gallery' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'About', href: '/about' },
+  { label: 'Services', href: '/services' },
+  { label: 'Doctors', href: '/doctors' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const stats = [
@@ -80,8 +81,9 @@ export const doctor = {
     'Highly Equipped Clinic',
     'Good quality care & service',
   ],
-  image:
-    'https://www.duhitadental.in/wp-content/uploads/2023/05/Untitled-design-300x300.png',
+  image: '/assets/dr.jpeg',
+  specialization: 'Oral & Maxillofacial Surgery',
+  experienceYears: 28,
 };
 
 export const about = {
@@ -203,4 +205,54 @@ export const beforeAfter = [
     before: 'https://www.duhitadental.in/wp-content/uploads/2024/08/1-2.png',
     after: 'https://www.duhitadental.in/wp-content/uploads/2024/08/1-1.png',
   },
+];
+
+export const heroCopy = {
+  eyebrow: 'Duhita Multispeciality Dental Centre',
+  titleTop: 'Best Dentistry Services',
+  titleBottom: 'You Can Trust.',
+};
+
+export const marquee = [
+  'Digital Smile Design',
+  'Guided Implantology',
+  'Single-Sitting RCT',
+  'Zirconia Crowns',
+  'Self-Ligating Braces',
+  'CBCT Planning',
+  'Painless Extractions',
+  'Paediatric Care',
+];
+
+export const pillars = [
+  {
+    title: 'Diagnose',
+    body: 'Digital RVG, OPG and CBCT imaging map the problem before a plan is written.',
+  },
+  {
+    title: 'Plan',
+    body: 'Every case is simulated — proportions, occlusion and shade agreed with you first.',
+  },
+  {
+    title: 'Treat',
+    body: 'Rotary endodontics, guided implant surgery and sterile single-use protocols.',
+  },
+  {
+    title: 'Maintain',
+    body: 'Structured recalls, hygiene coaching and long-term monitoring of every restoration.',
+  },
+];
+
+export const timeline = [
+  { year: '1997', title: 'Founded', body: 'Duhita opens in Vijayawada as a single-chair practice.' },
+  { year: '2008', title: 'Multispeciality', body: 'Endodontics, orthodontics and prosthodontics brought under one roof.' },
+  { year: '2016', title: 'Digital shift', body: 'Digital radiography and rotary endodontics adopted across the clinic.' },
+  { year: '2024', title: '10,000+ patients', body: 'Over 100 implants placed and thousands of smiles restored.' },
+];
+
+export const contactCards = [
+  { label: 'Call the clinic', value: '944 031 3066', href: 'tel:9440313066' },
+  { label: 'Email us', value: 'duhitadent@gmail.com', href: 'mailto:duhitadent@gmail.com' },
+  { label: 'Morning hours', value: '09:00 AM – 02:00 PM' },
+  { label: 'Evening hours', value: '05:00 PM – 09:00 PM' },
 ];

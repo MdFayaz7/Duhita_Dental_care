@@ -1,44 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
-export default function LazyImage({
-  src,
-  alt,
-  className = '',
-  wrapperClassName = '',
-  priority = false,
-  ...props
-}) {
-  const ref = useRef(null);
-  const [isVisible, setIsVisible] = useState(priority);
-
-  useEffect(() => {
-    if (priority || !ref.current) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '120px' },
-    );
-
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [priority]);
+export default function LazyImage({ src, alt = '', className = '', wrapperClassName = '', ...rest }) {
+  const [loaded, setLoaded] = useState(false);
 
   return (
-    <div ref={ref} className={`overflow-hidden ${wrapperClassName}`}>
-      <img
-        src={isVisible ? src : undefined}
-        alt={alt}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding="async"
-        fetchPriority={priority ? 'high' : 'auto'}
-        className={`transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'} ${className}`}
-        {...props}
+    <span className={`relative block overflow-hidden ${wrapperClassName}`}>
+      <span
+        className={`absolute inset-0 bg-gradient-to-br from-white/[0.07] to-white/[0.02] transition-opacity duration-700 ${
+          loaded ? 'opacity-0' : 'opacity-100 animate-pulse'
+        }`}
       />
-    </div>
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        className={`transition-all duration-[900ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          loaded ? 'scale-100 opacity-100 blur-0' : 'scale-105 opacity-0 blur-md'
+        } ${className}`}
+        {...rest}
+      />
+    </span>
   );
 }

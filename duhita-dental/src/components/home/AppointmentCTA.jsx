@@ -1,46 +1,38 @@
-import { motion } from 'framer-motion';
+import { FiArrowUpRight, FiPhone } from 'react-icons/fi';
 import { appointmentCta, site } from '../../data/content';
-import SectionHeading from '../ui/SectionHeading';
+import Reveal from '../ui/Reveal';
 
 export default function AppointmentCTA({ onOpenBooking }) {
   return (
-    <section className="relative overflow-hidden bg-brand-navy py-24 md:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(0,99,220,0.4),transparent_60%)]" />
-      <div className="pointer-events-none absolute -right-20 top-0 h-80 w-80 rounded-full bg-brand-accent/10 blur-3xl" />
-
-      <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <SectionHeading
-            title={appointmentCta.title}
-            description={appointmentCta.description}
-            align="center"
-            light
-            className="max-w-3xl"
-          />
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
-          >
-            <button
-              type="button"
-              onClick={() => onOpenBooking && onOpenBooking()}
-              className="inline-flex items-center justify-center rounded-2xl bg-brand-primary px-8 py-4 text-base font-semibold text-white shadow-xl shadow-brand-primary/30 hover:bg-brand-primary/90 transition-all hover:scale-105"
-            >
-              Reserve My Slot!
-            </button>
-            <a
-              href={site.social.whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-md hover:bg-white/20 transition-all"
-            >
-              WhatsApp Us
-            </a>
-          </motion.div>
-        </div>
+    <section className="relative overflow-hidden bg-black py-20 md:py-28">
+      <div className="shell">
+        <Reveal from="scale">
+          <div className="noise relative overflow-hidden rounded-[32px] border border-white/[0.1] bg-gradient-to-br from-[#0b1c33] via-[#070c18] to-black px-7 py-14 text-center md:rounded-[40px] md:px-16 md:py-20">
+            <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[radial-gradient(closest-side,rgba(10,132,255,0.4),transparent)]" />
+            <div className="relative">
+              <h2 className="display-2 text-grad mx-auto max-w-3xl text-balance">{appointmentCta.title}</h2>
+              <p className="type-lead mx-auto mt-5 max-w-2xl text-mute">
+                {appointmentCta.description}
+              </p>
+              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => onOpenBooking?.()}
+                  className="type-cta group inline-flex items-center gap-1.5 rounded-full bg-white px-6 py-3 text-black transition-colors duration-300 hover:bg-white/90"
+                >
+                  Reserve a slot
+                  <FiArrowUpRight size={16} className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </button>
+                <a
+                  href={`tel:${site.phone}`}
+                  className="type-cta inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-6 py-3 text-chalk transition-colors duration-300 hover:bg-white/[0.16]"
+                >
+                  <FiPhone size={16} /> {site.phoneDisplay}
+                </a>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

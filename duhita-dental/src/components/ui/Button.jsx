@@ -1,54 +1,32 @@
-import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
-const variants = {
-  primary:
-    'bg-brand-primary text-white hover:bg-brand-primary-dark shadow-[0_12px_40px_-12px_rgba(0,99,220,0.55)]',
-  secondary:
-    'bg-white/10 text-white border border-white/25 backdrop-blur-md hover:bg-white/20',
-  outline:
-    'bg-transparent text-brand-navy border border-brand-navy/15 hover:border-brand-primary hover:text-brand-primary dark:text-white dark:border-white/20 dark:hover:border-brand-primary dark:hover:text-brand-primary',
-  ghost: 'bg-brand-surface text-brand-navy hover:bg-brand-surface-alt dark:bg-brand-dark-card dark:text-white dark:hover:bg-brand-dark-surface',
+const BASE =
+  'type-cta inline-flex items-center justify-center gap-1.5 rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/70 disabled:opacity-50';
+
+const SIZES = {
+  sm: 'px-4 py-2 text-[14px]',
+  md: 'px-6 py-3',
+  lg: 'px-7 py-3.5',
 };
 
-const sizes = {
-  sm: 'px-5 py-2.5 text-sm',
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-8 py-3.5 text-base',
+const VARIANTS = {
+  primary: 'bg-brand-primary text-white hover:bg-[#3b9bff]',
+  glass: 'bg-white/[0.08] text-chalk hover:bg-white/[0.16]',
+  ghost: 'text-brand-primary hover:opacity-80',
+  light: 'bg-white text-black hover:bg-white/90',
 };
 
 export default function Button({
   children,
   variant = 'primary',
   size = 'md',
-  className = '',
+  to,
   href,
-  ...props
+  className = '',
+  ...rest
 }) {
-  const classes = `inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-tight transition-colors duration-300 ${variants[variant]} ${sizes[size]} ${className}`;
-
-  if (href) {
-    return (
-      <motion.a
-        href={href}
-        className={classes}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        {...props}
-      >
-        {children}
-      </motion.a>
-    );
-  }
-
-  return (
-    <motion.button
-      type="button"
-      className={classes}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      {...props}
-    >
-      {children}
-    </motion.button>
-  );
+  const cls = `${BASE} ${SIZES[size]} ${VARIANTS[variant]} ${className}`;
+  if (to) return <Link to={to} className={cls} {...rest}>{children}</Link>;
+  if (href) return <a href={href} className={cls} {...rest}>{children}</a>;
+  return <button type="button" className={cls} {...rest}>{children}</button>;
 }

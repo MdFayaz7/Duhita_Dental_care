@@ -1,52 +1,32 @@
-import { useState } from 'react';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
-import FloatingActions from '../components/layout/FloatingActions';
+import { useOutletContext } from 'react-router-dom';
 import Hero from '../components/home/Hero';
-import About from '../components/home/About';
-import Services from '../components/home/Services';
+import Marquee from '../components/home/Marquee';
+import AboutPreview from '../components/home/AboutPreview';
+import ServicesShowcase from '../components/home/ServicesShowcase';
 import AppointmentCTA from '../components/home/AppointmentCTA';
 import ResearchSection from '../components/home/ResearchSection';
+import DoctorSpotlight from '../components/home/DoctorSpotlight';
 import Gallery from '../components/home/Gallery';
-import Doctor from '../components/home/Doctor';
-import FAQ from '../components/home/FAQ';
 import GoogleReviews from '../components/home/GoogleReviews';
+import FAQ from '../components/home/FAQ';
 import MapSection from '../components/home/MapSection';
-import BookingModal from '../components/modal/BookingModal';
 
 export default function HomePage() {
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState('Dr. Nalluru Sasidhar');
-
-  const handleOpenBooking = (doctorName = 'Dr. Nalluru Sasidhar') => {
-    setSelectedDoctor(doctorName);
-    setBookingOpen(true);
-  };
+  const { onOpenBooking } = useOutletContext();
 
   return (
     <>
-      <Navbar onOpenBooking={handleOpenBooking} />
-      <main>
-        <Hero onOpenBooking={handleOpenBooking} />
-        <About />
-        <Services />
-        <AppointmentCTA onOpenBooking={handleOpenBooking} />
-        <ResearchSection />
-        <Gallery />
-        <Doctor onOpenBooking={handleOpenBooking} />
-        <GoogleReviews />
-        <FAQ />
-        <MapSection />
-      </main>
-      <Footer />
-      <FloatingActions onOpenBooking={handleOpenBooking} />
-
-      {/* Appointment Booking Modal */}
-      <BookingModal
-        isOpen={bookingOpen}
-        onClose={() => setBookingOpen(false)}
-        defaultDoctor={selectedDoctor}
-      />
+      <Hero onOpenBooking={onOpenBooking} />
+      <Marquee />
+      <AboutPreview />
+      <ServicesShowcase />
+      <AppointmentCTA onOpenBooking={onOpenBooking} />
+      <DoctorSpotlight onOpenBooking={onOpenBooking} />
+      <ResearchSection />
+      <Gallery />
+      <GoogleReviews />
+      <FAQ />
+      <MapSection />
     </>
   );
 }
