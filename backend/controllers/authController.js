@@ -1,28 +1,24 @@
-import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
-
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'duhita_dental_super_secret_jwt_key_2026_apple_style', {
-    expiresIn: '7d',
-  });
-};
+import { signAdminToken } from '../config/jwt.js';
 
 export const loginAdmin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email.trim() || !password) {
       return res.status(400).json({ success: false, message: 'Please provide email and password' });
     }
 
+    const identifier = email.trim().slice(0, 200);
+
     const admin = await Admin.findOne({
-      $or: [{ email: email.toLowerCase() }, { username: email }],
+      $or: [{ email: identifier.toLowerCase() }, { username: identifier }],
     });
 
     if (admin && (await admin.matchPassword(password))) {
       return res.json({
         success: true,
-        token: generateToken(admin._id),
+        token: signAdminToken(admin._id),
         admin: {
           id: admin._id,
           username: admin.username,

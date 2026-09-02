@@ -1,25 +1,26 @@
-import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
+import { verifyAdminToken } from '../config/jwt.js';
 
 export const protectAdmin = async (req, res, next) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  }
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7).trim() : null;
 
   if (!token) {
     return res.status(401).json({ success: false, message: 'Not authorized, token missing' });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'duhita_dental_super_secret_jwt_key_2026_apple_style');
+    const decoded = verifyAdminToken(token);
     const admin = await Admin.findById(decoded.id).select('-password');
     if (!admin) {
       return res.status(401).json({ success: false, message: 'Admin user not found' });
     }
+    if (admin.passwordChangedAt && decoded.iat * 1000 < admin.passwordChangedAt.getTime() - 2000) {
+      return res.status(401).json({ success: false, message: 'Session expired, please sign in again' });
+    }
     req.admin = admin;
-    next();
-  } catch (error) {
+    return next();
+  } catch {
     return res.status(401).json({ success: false, message: 'Invalid or expired token' });
   }
 };

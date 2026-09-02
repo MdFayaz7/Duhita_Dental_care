@@ -10,7 +10,7 @@ const appointmentSchema = new mongoose.Schema(
     doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' },
     doctorName: { type: String, default: 'Dr. Nalluru Sasidhar' },
     appointmentDate: { type: String, required: true }, // Format YYYY-MM-DD
-    timeSlot: { type: String, enum: ['Morning', 'Afternoon', 'Evening'], required: true },
+    timeSlot: { type: String, enum: ['Morning', 'Evening', 'Afternoon'], required: true },
     status: {
       type: String,
       enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],

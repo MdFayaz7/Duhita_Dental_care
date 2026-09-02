@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      navigate('/admin/login');
+      navigate('/admin/login', { replace: true });
     }
   }, [authLoading, isAuthenticated, navigate]);
 

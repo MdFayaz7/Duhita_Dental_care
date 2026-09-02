@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import SiteLayout from './components/layout/SiteLayout';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
@@ -6,6 +6,7 @@ import ServicesPage from './pages/ServicesPage';
 import DoctorsPage from './pages/DoctorsPage';
 import GalleryPage from './pages/GalleryPage';
 import ContactPage from './pages/ContactPage';
+import RequireAuth from './components/auth/RequireAuth';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
@@ -22,7 +23,11 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
         </Route>
         <Route path="/admin/login" element={<AdminLoginPage />} />
-        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        </Route>
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

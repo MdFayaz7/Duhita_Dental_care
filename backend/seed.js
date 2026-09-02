@@ -23,18 +23,11 @@ const seedData = async () => {
     await mongoose.connect(mongoUri);
     console.log('✅ Connected to MongoDB Atlas for Seeding!');
 
-    // Seed Admin
-    const existingAdmin = await Admin.findOne({ email: 'admin@duhitadental.in' });
-    if (!existingAdmin) {
-      await Admin.create({
-        username: 'admin',
-        email: 'admin@duhitadental.in',
-        password: 'Admin@123456',
-        name: 'Super Admin',
-      });
-      console.log('✅ Admin user created: admin@duhitadental.in / Admin@123456');
+    const adminCount = await Admin.countDocuments();
+    if (adminCount === 0) {
+      console.log('ℹ️ No admin account found. Create one with: npm run rotate-admin');
     } else {
-      console.log('ℹ️ Admin user already exists');
+      console.log('ℹ️ Admin account already exists — use npm run rotate-admin to change credentials');
     }
 
     // Seed Doctor

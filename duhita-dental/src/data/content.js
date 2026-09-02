@@ -11,8 +11,8 @@ export const site = {
   address:
     '1ST FLOOR, D.NO: 59, Shanthi Plaza, 14-2/1, above SBI NRI branch, Gayatri Nagar, Krishna Nagar, Vijayawada, Andhra Pradesh',
   hours: {
-    morning: '09:00 AM – 02:00 PM',
-    evening: '05:00 PM – 09:00 PM',
+    morning: '09:00 AM – 01:00 PM',
+    evening: '03:00 PM – 09:00 PM',
   },
   social: {
     facebook:
@@ -253,6 +253,6 @@ export const timeline = [
 export const contactCards = [
   { label: 'Call the clinic', value: '944 031 3066', href: 'tel:9440313066' },
   { label: 'Email us', value: 'duhitadent@gmail.com', href: 'mailto:duhitadent@gmail.com' },
-  { label: 'Morning hours', value: '09:00 AM – 02:00 PM' },
-  { label: 'Evening hours', value: '05:00 PM – 09:00 PM' },
+  { label: 'Morning hours', value: '09:00 AM – 01:00 PM' },
+  { label: 'Evening hours', value: '03:00 PM – 09:00 PM' },
 ];

@@ -1,23 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FiCalendar, FiCheckCircle, FiClock, FiPhone, FiUser, FiX } from 'react-icons/fi';
 import client from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import { site } from '../../data/content';
+import { availableSlots, earliestBookableDate, isValidDateString, istNow } from '../../data/booking';
 
 const FIELD =
   'w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[14.5px] text-chalk outline-none transition-all duration-300 placeholder:text-mute-2 focus:border-brand-cyan/60 focus:bg-white/[0.07]';
 const LABEL = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.13em] text-mute-2';
 
-const emptyForm = (doctor) => ({
-  name: '',
-  contactNo: '',
-  patientId: '',
-  problem: '',
-  doctorName: doctor,
-  appointmentDate: new Date().toISOString().split('T')[0],
-  timeSlot: 'Morning',
-});
+const emptyForm = (doctor) => {
+  const date = earliestBookableDate();
+  return {
+    name: '',
+    contactNo: '',
+    patientId: '',
+    problem: '',
+    doctorName: doctor,
+    appointmentDate: date,
+    timeSlot: availableSlots(date)[0]?.id || 'Morning',
+  };
+};
 
 export default function BookingModal({ isOpen, onClose, defaultDoctor = 'Dr. Nalluru Sasidhar' }) {
   const toast = useToast();
@@ -26,6 +30,10 @@ export default function BookingModal({ isOpen, onClose, defaultDoctor = 'Dr. Nal
   const [formData, setFormData] = useState(emptyForm(defaultDoctor));
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [dateError, setDateError] = useState('');
+
+  const minDate = earliestBookableDate();
+  const slots = useMemo(() => availableSlots(formData.appointmentDate), [formData.appointmentDate]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -48,8 +56,46 @@ export default function BookingModal({ isOpen, onClose, defaultDoctor = 'Dr. Nal
 
   const set = (k) => (e) => setFormData((f) => ({ ...f, [k]: e.target.value }));
 
+  const setDate = (e) => {
+    const value = e.target.value;
+    setFormData((f) => ({ ...f, appointmentDate: value }));
+
+    if (!isValidDateString(value)) {
+      setDateError('Please choose a valid date.');
+      return;
+    }
+    if (value < istNow().date) {
+      setDateError('That date has already passed. Please choose today or a later date.');
+      return;
+    }
+    const open = availableSlots(value);
+    if (open.length === 0) {
+      setDateError('All slots for today are over. Please choose a later date.');
+      return;
+    }
+    setDateError('');
+    setFormData((f) => ({
+      ...f,
+      appointmentDate: value,
+      timeSlot: open.some((s) => s.id === f.timeSlot) ? f.timeSlot : open[0].id,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const date = formData.appointmentDate;
+    if (!isValidDateString(date) || date < istNow().date) {
+      setDateError('That date has already passed. Please choose today or a later date.');
+      return;
+    }
+    const open = availableSlots(date);
+    if (!open.some((s) => s.id === formData.timeSlot)) {
+      setDateError('That time slot has already passed. Please pick a later slot or another day.');
+      return;
+    }
+
+    setDateError('');
     setLoading(true);
     try {
       const res = await client.post('/appointments', { ...formData, patientType });
@@ -217,10 +263,11 @@ export default function BookingModal({ isOpen, onClose, defaultDoctor = 'Dr. Nal
                           id="bk-date"
                           type="date"
                           required
-                          min={new Date().toISOString().split('T')[0]}
+                          min={minDate}
                           value={formData.appointmentDate}
-                          onChange={set('appointmentDate')}
-                          className={`${FIELD} pl-11`}
+                          onChange={setDate}
+                          aria-invalid={Boolean(dateError)}
+                          className={`${FIELD} pl-11 ${dateError ? 'border-red-500/60' : ''}`}
                         />
                       </div>
                     </div>
@@ -228,14 +275,32 @@ export default function BookingModal({ isOpen, onClose, defaultDoctor = 'Dr. Nal
                       <label className={LABEL} htmlFor="bk-slot">Time slot *</label>
                       <div className="relative">
                         <FiClock className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-mute-2" size={15} />
-                        <select id="bk-slot" value={formData.timeSlot} onChange={set('timeSlot')} className={`${FIELD} appearance-none pl-11`}>
-                          <option value="Morning" className="bg-[#0b0d13]">Morning · 09:00–13:00</option>
-                          <option value="Afternoon" className="bg-[#0b0d13]">Afternoon · 13:00–17:00</option>
-                          <option value="Evening" className="bg-[#0b0d13]">Evening · 17:00–21:00</option>
+                        <select
+                          id="bk-slot"
+                          value={formData.timeSlot}
+                          onChange={set('timeSlot')}
+                          disabled={slots.length === 0}
+                          className={`${FIELD} appearance-none pl-11 disabled:opacity-50`}
+                        >
+                          {slots.length === 0 ? (
+                            <option value="" className="bg-[#0b0d13]">No slots left for this date</option>
+                          ) : (
+                            slots.map((slot) => (
+                              <option key={slot.id} value={slot.id} className="bg-[#0b0d13]">
+                                {slot.label} · {slot.display}
+                              </option>
+                            ))
+                          )}
                         </select>
                       </div>
                     </div>
                   </div>
+
+                  {dateError && (
+                    <p role="alert" className="text-[13px] font-medium text-red-400">
+                      {dateError}
+                    </p>
+                  )}
 
                   <div>
                     <label className={LABEL} htmlFor="bk-problem">Reason (optional)</label>
@@ -258,7 +323,7 @@ export default function BookingModal({ isOpen, onClose, defaultDoctor = 'Dr. Nal
                     </a>
                     <button
                       type="submit"
-                      disabled={loading}
+                      disabled={loading || slots.length === 0}
                       className="flex-1 rounded-full bg-brand-primary px-6 py-3.5 text-[14px] font-semibold text-white shadow-[0_14px_40px_-14px_rgba(10,132,255,1)] transition-all duration-500 hover:bg-[#3b9bff] disabled:opacity-50"
                     >
                       {loading ? 'Confirming…' : 'Book online'}

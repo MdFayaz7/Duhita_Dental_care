@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiLock, FiMail, FiArrowRight, FiCheckCircle } from 'react-icons/fi';
+import { FiLock, FiMail, FiArrowRight } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('admin@duhitadental.in');
-  const [password, setPassword] = useState('Admin@123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
   const toast = useToast();
@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@duhitadental.in"
+                placeholder="Username or email"
                 className="w-full rounded-2xl border border-white/15 bg-white/10 pl-11 pr-4 py-3 text-sm text-white placeholder-white/40 outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
               />
             </div>
@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
             <div className="relative">
               <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50" size={18} />
               <input
-                type="password"
+                type="password" autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -87,11 +87,6 @@ export default function AdminLoginPage() {
                 className="w-full rounded-2xl border border-white/15 bg-white/10 pl-11 pr-4 py-3 text-sm text-white placeholder-white/40 outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
               />
             </div>
-          </div>
-
-          <div className="rounded-xl bg-white/5 p-3 text-xs text-white/70 border border-white/10 flex items-start gap-2">
-            <FiCheckCircle className="text-emerald-400 shrink-0 mt-0.5" size={14} />
-            <span>Default Seed Credentials: <strong>admin@duhitadental.in</strong> / <strong>Admin@123456</strong></span>
           </div>
 
           <button

@@ -1,4 +1,5 @@
 import Appointment from '../models/Appointment.js';
+import { validateBooking } from '../config/slots.js';
 
 export const bookAppointment = async (req, res, next) => {
   try {
@@ -6,6 +7,19 @@ export const bookAppointment = async (req, res, next) => {
 
     if (!name || !contactNo || !appointmentDate || !timeSlot) {
       return res.status(400).json({ success: false, message: 'Please fill in all required fields' });
+    }
+
+    if (typeof name !== 'string' || typeof contactNo !== 'string') {
+      return res.status(400).json({ success: false, message: 'Invalid name or contact number' });
+    }
+
+    if (!/^[0-9+\-\s()]{7,20}$/.test(contactNo.trim())) {
+      return res.status(400).json({ success: false, message: 'Please provide a valid contact number' });
+    }
+
+    const check = validateBooking(appointmentDate, timeSlot);
+    if (!check.ok) {
+      return res.status(400).json({ success: false, message: check.message });
     }
 
     let finalPatientId = patientId;
@@ -17,9 +31,9 @@ export const bookAppointment = async (req, res, next) => {
     const appointment = await Appointment.create({
       patientType: patientType || 'new',
       patientId: finalPatientId,
-      name,
-      contactNo,
-      problem: problem || '',
+      name: name.trim().slice(0, 120),
+      contactNo: contactNo.trim(),
+      problem: typeof problem === 'string' ? problem.trim().slice(0, 500) : '',
       doctorId: doctorId || null,
       doctorName: doctorName || 'Dr. Nalluru Sasidhar',
       appointmentDate,
